@@ -8,6 +8,7 @@ members = [
     "plojo_translator",
     "plojo_output_enigo",
     "plojo_output_macos",
+    "plojo_output_wayland",
     "cli",
     "telemetry",
     "lookup",

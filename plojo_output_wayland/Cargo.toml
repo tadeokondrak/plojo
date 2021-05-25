@@ -1,0 +1,16 @@
+[package]
+name = "plojo_output_wayland"
+version = "0.1.0"
+authors = ["Richard Liu <richy.liu.2002@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+plojo_core = { path = "../plojo_core" }
+wayland-client = "0.28.5"
+wayland-commons = "0.28.5"
+bitflags = "1"
+
+[build-dependencies]
+wayland-scanner = "0.28.5"

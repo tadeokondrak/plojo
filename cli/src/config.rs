@@ -3,10 +3,8 @@ use std::{collections::HashSet, path::Path};
 
 use plojo_core::{Command, Controller, Machine, Stroke};
 use plojo_input_geminipr::GeminiprMachine;
-use plojo_input_keyboard::KeyboardMachine;
 use plojo_input_stdin::StdinMachine;
-use plojo_output_enigo::EnigoController;
-use plojo_output_macos::MacController;
+use plojo_output_wayland::WaylandController;
 
 #[derive(Debug, Deserialize)]
 pub struct Config {
@@ -49,9 +47,7 @@ impl Config {
                 Box::new(GeminiprMachine::new(port).expect("unable to connect to geminipr machine"))
                     as Box<dyn Machine>
             }
-            InputMachineType::Keyboard => Box::new(
-                KeyboardMachine::new().with_reenable_shortcuts(self.enable_input_shortcuts.clone()),
-            ) as Box<dyn Machine>,
+            InputMachineType::Keyboard => unreachable!(),
         }
     }
 
@@ -67,13 +63,16 @@ impl Config {
         println!("[INFO] Output to: {:?}", output);
         match output {
             OutputDispatchType::Enigo => {
-                Box::new(EnigoController::new(self.disable_scan_keymap)) as Box<dyn Controller>
+                panic!()
             }
             OutputDispatchType::MacNative => {
-                Box::new(MacController::new(self.disable_scan_keymap)) as Box<dyn Controller>
+                panic!()
             }
             OutputDispatchType::Stdout => {
                 Box::new(StdoutController::new(self.disable_scan_keymap)) as Box<dyn Controller>
+            }
+            OutputDispatchType::Wayland => {
+                Box::new(WaylandController::new(self.disable_scan_keymap)) as Box<dyn Controller>
             }
         }
     }
@@ -137,6 +136,7 @@ enum OutputDispatchType {
     MacNative,
     Enigo,
     Stdout,
+    Wayland,
 }
 
 impl Default for OutputDispatchType {

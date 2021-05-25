@@ -84,8 +84,9 @@ pub(super) fn load_dicts(contents: &str) -> Result<Entries, ParseError> {
         let stroke = parse_stroke(stroke)?;
         match translation {
             Value::String(translation_str) => {
-                let parsed = parse_translation(translation_str)?;
-                result_entries.push((stroke, Translation::Text(parsed)));
+                if let Ok(parsed) = parse_translation(translation_str) {
+                    result_entries.push((stroke, Translation::Text(parsed)));
+                }
             }
             Value::Object(obj) => {
                 let commands = obj.get("cmds").ok_or_else(|| {
@@ -332,12 +333,7 @@ fn parse_special(t: &str) -> Result<Vec<Text>, ParseError> {
                 }
             }
 
-            // allow `{#}` to do nothing for plover compatibility
-            if _t == "#" {
-                return Ok(vec![]);
-            }
-
-            Err(ParseError::InvalidSpecialAction(_t.to_string()))
+            return Ok(vec![]);
         }
     }
 }
